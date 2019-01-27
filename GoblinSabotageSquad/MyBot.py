@@ -41,10 +41,8 @@ class LocationCalculator:
 
     def create_line_by_locations(self, location1, location2):
         m = (location1.col - location2.col) / (location1.row - location2.row)
-        b = location1.col - m * location1.row
-        return lambda x: m * x + b
-    
-    
+        c = location1.col - m * location1.row
+        return [lambda x: m * x + c, m, c]
 
 
 class RangeUtills:
@@ -70,9 +68,11 @@ class RangeUtills:
 
     def sort_by_range(self, map_objects, target):
         return sorted(map_objects, key=lambda map_object: map_object.distance(target))
-    
-    
 
+    def range_from_line(self, location1, line_func):
+        return (math.fabs(line_func[1] * location1.get_x + -1 * location1.get_y + line_func[2])) / math.sqrt(
+            line_func[1]
+            ^ 2 + 1)
 
 class TurnHandler:
     def __init__(self):
@@ -248,7 +248,7 @@ class TurnHandler:
     def defensive_portal(self, portal):
         if len(RangeUtills.enemy_units_in_range(self.my_castle, 3000, self.enemy_creatures)) > len(
                 RangeUtills.enemy_units_in_range(self.my_castle, 3000,
-                                                     self.my_creatures)) and portal.can_summon_ice_troll():
+                                                 self.my_creatures)) and portal.can_summon_ice_troll():
             portal.summon_ice_troll()
 
     def offensive_portal(self, portal):

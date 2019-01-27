@@ -26,7 +26,19 @@ class LocationCalculator:
         col = int((self.my_castle_location.col + self.enemy_castle_location.col) / 2)
         return Location(row=row, col=col)
 
+    def get_location_on_lava_castle_circle_by_x(self, castle, radius, x):
+       #Finds x for  R^2=(y-b)^2+*(x-a)^2, where (a,b) is the center
+       #Circle function
 
+        if x > radius:
+          return Location(None, None)
+        return [Location(math.sqrt(radius*radius - x*x + 2*
+                castle.location.rowx - castle.location.rowcastle.location.row) + castle.loation.col), Location(
+          -math.sqrt(radius*radius - x*x + 2*
+        castle.location.row*x - castle.location.row*castle.location.row)+ castle.location.col)]
+
+    def create_line_by_locations(self,location1, location2):
+       return lambda mx,y,b:
 
 class UtilityCommands:
 
@@ -72,7 +84,6 @@ class TurnHandler:
         self.my_elves_by_role = {}
 
         self.defensive_portal_locations_list = []
-
 
      def get_optimal_attack_portal_location(self):
         pass

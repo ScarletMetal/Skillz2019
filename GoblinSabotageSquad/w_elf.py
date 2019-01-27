@@ -7,4 +7,4 @@ class elfWR:
     """
 
     def __init__(self, elf):
-        self.elf = elf;
+        self.elf = elf

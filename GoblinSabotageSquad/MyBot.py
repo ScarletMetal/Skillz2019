@@ -9,8 +9,6 @@ class LocationCalculator:
         this class is used to calculate some locations, currently the different defensive portals
     """
 
-
-
     def __init__(self, my_castle_location, enemy_castle_location, first_portal_location):
         self.my_castle_location = my_castle_location
         self.enemy_castle_location = enemy_castle_location
@@ -27,18 +25,24 @@ class LocationCalculator:
         return Location(row=row, col=col)
 
     def get_location_on_lava_castle_circle_by_x(self, castle, radius, x):
-       #Finds x for  R^2=(y-b)^2+*(x-a)^2, where (a,b) is the center
-       #Circle function
+        # Finds x for  R^2=(y-b)^2+*(x-a)^2, where (a,b) is the center
+        # Circle function
 
         if x > radius:
-          return Location(None, None)
-        return [Location(math.sqrt(radius*radius - x*x + 2*
-                castle.location.rowx - castle.location.rowcastle.location.row) + castle.loation.col), Location(
-          -math.sqrt(radius*radius - x*x + 2*
-        castle.location.row*x - castle.location.row*castle.location.row)+ castle.location.col)]
+            return Location(None, None)
+        return [Location(x, math.sqrt(radius * radius - x * x + 2 *
+                                      castle.get_location().getx() * x - castle.get_location().getx() *
+                                      castle.get_location().getx()) + castle.get_location().gety()),
+                Location(x,
+                         -(math.sqrt(radius * radius - x * x + 2 *
+                                     castle.get_location().getx() * x - castle.get_location().getx() *
+                                     castle.get_location().getx()) + castle.get_location().gety()))]
 
-    def create_line_by_locations(self,location1, location2):
-       return lambda mx,y,b:
+    def create_line_by_locations(self, location1, location2):
+        m = (location1.col - location2.col) / (location1.row - location2.row)
+        b = location1.col - m * location1.row
+        return lambda x: m * x + b
+
 
 class UtilityCommands:
 
@@ -82,11 +86,7 @@ class TurnHandler:
         self.my_mana = None
 
         self.my_elves_by_role = {}
-
         self.defensive_portal_locations_list = []
-
-     def get_optimal_attack_portal_location(self):
-        pass
 
     """
         runs this function on the first turn on combat,
@@ -219,7 +219,6 @@ class TurnHandler:
 
         return optimal_location
 
-
     def handle_defender_elf(self, elf):
         if len(self.defensive_portal_locations_list) != 0:
             target = self.defensive_portal_locations_list.pop()
@@ -242,7 +241,9 @@ class TurnHandler:
                     elf.move_to(closest_structure)
 
     def defensive_portal(self, portal):
-        if len(UtilityCommands.enemy_units_in_range(self.my_castle, 3000, self.enemy_creatures)) > len(UtilityCommands.enemy_units_in_range(self.my_castle, 3000,self.my_creatures)) and portal.can_summon_ice_troll():
+        if len(UtilityCommands.enemy_units_in_range(self.my_castle, 3000, self.enemy_creatures)) > len(
+                UtilityCommands.enemy_units_in_range(self.my_castle, 3000,
+                                                     self.my_creatures)) and portal.can_summon_ice_troll():
             portal.summon_ice_troll()
 
     def offensive_portal(self, portal):

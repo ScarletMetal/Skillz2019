@@ -16,3 +16,6 @@ class ElfWrapper:
 
     def get_y(self):
         return self.get_location().get_y()
+
+    def move_to(self, location):
+        self.elf.move_to(location.location)

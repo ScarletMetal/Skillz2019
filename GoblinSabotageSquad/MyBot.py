@@ -42,7 +42,7 @@ class LocationCalculator:
     def create_line_by_locations(self, location1, location2):
         m = (location1.col - location2.col) / (location1.row - location2.row)
         c = location1.col - m * location1.row
-        return [lambda x: m * x + c, m, c]
+        return [m, c]
 
 
 class RangeUtills:

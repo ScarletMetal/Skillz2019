@@ -5,8 +5,9 @@ class ElfWrapper:
         this class is a wrapper for elf.
     """
 
-    def __init__(self, elf):
+    def __init__(self, elf, role):
         self.elf = elf
+        self.role = role
 
     def get_location(self):
         return Location(self.elf.location)

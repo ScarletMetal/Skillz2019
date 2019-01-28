@@ -10,6 +10,8 @@ class LocationCalculator:
         this class is used to calculate some locations, currently the different defensive portals
     """
 
+    attack_portal_possible_locations = []
+
     def __init__(self, my_castle_location, enemy_castle_location, first_portal_location):
         self.my_castle_location = my_castle_location
         self.enemy_castle_location = enemy_castle_location
@@ -25,19 +27,24 @@ class LocationCalculator:
         col = int((self.my_castle_location.col + self.enemy_castle_location.col) / 2)
         return Location(row=row, col=col)
 
-    def get_location_on_lava_castle_circle_by_x(self, castle, radius, x):
+    def get_location_on_castle_circle_by_x(self, castle, radius, x):
         # Finds x for  R^2=(y-b)^2+*(x-a)^2, where (a,b) is the center
         # Circle function
 
         if x > radius or x < 0:
-            return Location(None, None)
-        return [Location(x, math.sqrt(radius * radius - x * x + 2 *
-                                      castle.get_location().get_x() * x - castle.get_location().get_x() *
-                                      castle.get_location().get_x()) + castle.get_location().get_y()),
-                Location(x,
-                         -(math.sqrt(radius * radius - x * x + 2 *
-                                     castle.get_location().get_x() * x - castle.get_location().get_x() *
-                                     castle.get_location().get_x()) + castle.get_location().get_y()))]
+            return None
+
+        y1 = math.sqrt(radius * radius - x * x + 2 *
+                       castle.get_location().get_x() * x - castle.get_location().get_x() *
+                       castle.get_location().get_x()) + castle.get_location().get_y())
+
+        y2 = -(math.sqrt(radius * radius - x * x + 2 *
+                         castle.get_location().get_x() * x - castle.get_location().get_x() *
+                         castle.get_location().get_x()) + castle.get_location().get_y()))]
+
+
+        return [Location(x, y1),
+                Location(x, y2)]
 
     def create_line_by_locations(self, location1, location2):
         m = (location1.get_y() - location2.get_y()) / (location1.get_x() - location2.get_x())
@@ -52,25 +59,23 @@ class LocationCalculator:
         x1 = (m * c - b * m + math.sqrt(
             radius ^ 2 * m ^ 2 - a ^ 2 * m ^ 2 + 2 * a * b * m - 2 * a * m * c
             + 2 * b * c + radius ^ 2 - b ^ 2 - c ^ 2) - a) / (
-                       -1 - m ^ 2)
+                     -1 - m ^ 2)
         x2 = -((m * c - b * m + math.sqrt(
             radius ^ 2 * m ^ 2 - a ^ 2 * m ^ 2 + 2 * a * b * m - 2 * a * m * c
             + 2 * b * c + radius ^ 2 - b ^ 2 - c ^ 2) + a) / (
                        -1 - m ^ 2))
-        return [Location(x1, m*x1+c),Location(x2, m*x2+c)]
-
-
+        return [Location(x1, m * x1 + c), Location(x2, m * x2 + c)]
 
     def calc_attack_portal_location(self, radius, castle):
-        if (castle.get_location().get_x() - radius <0):
+        if (castle.get_location().get_x() - radius < 0):
             x = 0
         else:
             x = castle.get_location().get_x() - radius
-        while(x < 2*radius):
-            pass
+        while (x < 2 * radius):
+            if (LocationCalculator.get_location_on_castle_circle_by_x(self, castle, radius, x) != None):
+                LocationCalculator.get_location_on_castle_circle_by_x(self, castle, radius, x)
 
-
-
+        x += ATTACK_PORTAL_LOCATION_ACCURACY
 
 
 class RangeUtills:

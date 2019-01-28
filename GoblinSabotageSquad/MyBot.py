@@ -74,7 +74,7 @@ class TurnHandler:
         self.defensive_portal_locations_list = []
 
 
-     def get_optimal_attack_portal_location(self):
+    def get_optimal_attack_portal_location(self):
         pass
 
     """

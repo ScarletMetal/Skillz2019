@@ -11,6 +11,7 @@ class LocationCalculator:
     """
 
     attack_portal_possible_locations = []
+    global attack_portal_possible_locations
 
     def __init__(self, my_castle_location, enemy_castle_location, first_portal_location):
         self.my_castle_location = my_castle_location
@@ -36,15 +37,18 @@ class LocationCalculator:
 
         y1 = math.sqrt(radius * radius - x * x + 2 *
                        castle.get_location().get_x() * x - castle.get_location().get_x() *
-                       castle.get_location().get_x()) + castle.get_location().get_y())
+                       castle.get_location().get_x()) + castle.get_location().get_y()
 
         y2 = -(math.sqrt(radius * radius - x * x + 2 *
                          castle.get_location().get_x() * x - castle.get_location().get_x() *
-                         castle.get_location().get_x()) + castle.get_location().get_y()))]
+                         castle.get_location().get_x()) + castle.get_location().get_y())
 
-
-        return [Location(x, y1),
-                Location(x, y2)]
+        if (y2 < 0):
+            return [Location(x, y1)]
+        elif (y1 < 0):
+            return [Location(x, y2)]
+        else:
+            return None
 
     def create_line_by_locations(self, location1, location2):
         m = (location1.get_y() - location2.get_y()) / (location1.get_x() - location2.get_x())
@@ -73,9 +77,14 @@ class LocationCalculator:
             x = castle.get_location().get_x() - radius
         while (x < 2 * radius):
             if (LocationCalculator.get_location_on_castle_circle_by_x(self, castle, radius, x) != None):
-                LocationCalculator.get_location_on_castle_circle_by_x(self, castle, radius, x)
+                attack_portal_possible_locations.append(LocationCalculator.get_location_on_castle_circle_by_x(self, castle, radius, x))
+            x += ATTACK_PORTAL_LOCATION_ACCURACY
 
-        x += ATTACK_PORTAL_LOCATION_ACCURACY
+        for locations in attack_portal_possible_locations:
+            for location in locations:
+                max = location
+                # WRITE HERE FIND MIN DISTANCE AND RETURN IT AND YOURE DONNNNNNEEEEEE
+
 
 
 class RangeUtills:

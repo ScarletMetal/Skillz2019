@@ -1,5 +1,6 @@
-from elf_kingdom import *
 import math
+
+from elf_kingdom import *
 
 ATTACK_PORTAL_LOCATION_ACCURACY = 20
 
@@ -8,8 +9,6 @@ class LocationCalculator:
     """
         this class is used to calculate some locations, currently the different defensive portals
     """
-
-
 
     def __init__(self, my_castle_location, enemy_castle_location, first_portal_location):
         self.my_castle_location = my_castle_location
@@ -27,9 +26,7 @@ class LocationCalculator:
         return Location(row=row, col=col)
 
 
-
 class UtilityCommands:
-
     def __init__(self):
         pass;
 
@@ -72,7 +69,6 @@ class TurnHandler:
         self.my_elves_by_role = {}
 
         self.defensive_portal_locations_list = []
-
 
     def get_optimal_attack_portal_location(self):
         pass
@@ -208,7 +204,6 @@ class TurnHandler:
 
         return optimal_location
 
-
     def handle_defender_elf(self, elf):
         if len(self.defensive_portal_locations_list) != 0:
             target = self.defensive_portal_locations_list.pop()
@@ -231,7 +226,9 @@ class TurnHandler:
                     elf.move_to(closest_structure)
 
     def defensive_portal(self, portal):
-        if len(UtilityCommands.enemy_units_in_range(self.my_castle, 3000, self.enemy_creatures)) > len(UtilityCommands.enemy_units_in_range(self.my_castle, 3000,self.my_creatures)) and portal.can_summon_ice_troll():
+        if len(UtilityCommands.enemy_units_in_range(self.my_castle, 3000, self.enemy_creatures)) > len(
+                UtilityCommands.enemy_units_in_range(self.my_castle, 3000,
+                                                     self.my_creatures)) and portal.can_summon_ice_troll():
             portal.summon_ice_troll()
 
     def offensive_portal(self, portal):

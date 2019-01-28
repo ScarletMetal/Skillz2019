@@ -1,7 +1,7 @@
-from elf_kingdom import *
 from w_location import LocationWrapper
 
-class Castle_Wrapper:
+
+class CastleWrapper:
     """
         this class is a wrapper for castle.
     """

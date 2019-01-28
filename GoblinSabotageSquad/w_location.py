@@ -1,4 +1,5 @@
 import elf_kingdom
+
 GAME_WIDTH = 0
 GAME_HEIGHT = 0
 

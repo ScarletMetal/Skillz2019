@@ -40,15 +40,15 @@ class LocationCalculator:
                                      castle.get_location().get_x()) + castle.get_location().get_y()))]
 
     def create_line_by_locations(self, location1, location2):
-        m = (location1.col - location2.col) / (location1.row - location2.row)
-        c = location1.col - m * location1.row
+        m = (location1.get_y() - location2.get_y()) / (location1.get_x() - location2.get_x())
+        c = location1.get_y() - m * location1.get_x
         return [m, c]
 
 
 class RangeUtills:
 
     def __init__(self):
-        pass;
+        pass
 
     def enemy_units_in_range(self, target, rng, enemy_units):
         return filter(lambda unit: unit.distance(target) < rng, enemy_units)
@@ -73,6 +73,7 @@ class RangeUtills:
         return (math.fabs(line_func[1] * location1.get_x + -1 * location1.get_y + line_func[2])) / math.sqrt(
             line_func[1]
             ^ 2 + 1)
+
 
 class TurnHandler:
     def __init__(self):

@@ -1,7 +1,7 @@
 from elf_kingdom import *
 
 
-class Portal_Wrapper:
+class Portal_Wrapper(Portal):
     """
         this class is a wrapper for portal.
     """

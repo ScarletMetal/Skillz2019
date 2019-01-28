@@ -44,6 +44,34 @@ class LocationCalculator:
         c = location1.get_y() - m * location1.get_x
         return [m, c]
 
+    def find_intersections_line_circle(self, radius, castle, line):
+        m = line[0]
+        c = line[1]
+        a = castle.get_location().get_x()
+        b = castle.get_location().get_y()
+        x1 = (m * c - b * m + math.sqrt(
+            radius ^ 2 * m ^ 2 - a ^ 2 * m ^ 2 + 2 * a * b * m - 2 * a * m * c
+            + 2 * b * c + radius ^ 2 - b ^ 2 - c ^ 2) - a) / (
+                       -1 - m ^ 2)
+        x2 = -((m * c - b * m + math.sqrt(
+            radius ^ 2 * m ^ 2 - a ^ 2 * m ^ 2 + 2 * a * b * m - 2 * a * m * c
+            + 2 * b * c + radius ^ 2 - b ^ 2 - c ^ 2) + a) / (
+                       -1 - m ^ 2))
+        return [Location(x1, m*x1+c),Location(x2, m*x2+c)]
+
+
+
+    def calc_attack_portal_location(self, radius, castle):
+        if (castle.get_location().get_x() - radius <0):
+            x = 0
+        else:
+            x = castle.get_location().get_x() - radius
+        while(x < 2*radius):
+            pass
+
+
+
+
 
 class RangeUtills:
 

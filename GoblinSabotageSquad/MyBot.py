@@ -92,7 +92,7 @@ class LocationCalculator:
                     return location
 
         if (min <= 0):
-            return Location(5000, 5000)
+            return Location(5000, 5000) #INSERT DEFAULT LOCATION HERE
 
 
 class RangeUtills:

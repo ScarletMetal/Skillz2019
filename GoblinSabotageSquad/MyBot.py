@@ -70,21 +70,29 @@ class LocationCalculator:
                        -1 - m ^ 2))
         return [Location(x1, m * x1 + c), Location(x2, m * x2 + c)]
 
-    def calc_attack_portal_location(self, radius, castle):
+    def calc_attack_portal_location(self, radius, castle, enemy_portals):
         if (castle.get_location().get_x() - radius < 0):
             x = 0
         else:
             x = castle.get_location().get_x() - radius
         while (x < 2 * radius):
             if (LocationCalculator.get_location_on_castle_circle_by_x(self, castle, radius, x) != None):
-                attack_portal_possible_locations.append(LocationCalculator.get_location_on_castle_circle_by_x(self, castle, radius, x))
+                attack_portal_possible_locations.append(
+                    LocationCalculator.get_location_on_castle_circle_by_x(self, castle, radius, x))
             x += ATTACK_PORTAL_LOCATION_ACCURACY
 
+        min = 0
         for locations in attack_portal_possible_locations:
             for location in locations:
-                max = location
-                # WRITE HERE FIND MIN DISTANCE AND RETURN IT AND YOURE DONNNNNNEEEEEE
+                sum = RangeUtills.sum_of_distance_to_line(RangeUtills(),
+                                                          LocationCalculator.create_line_by_locations(self, location,
+                                                                                                      castle.get_location()),
+                                                          enemy_portals)
+                if sum > min:
+                    return location
 
+        if (min <= 0):
+            return Location(5000, 5000)
 
 
 class RangeUtills:
@@ -115,6 +123,12 @@ class RangeUtills:
         return (math.fabs(line_func[1] * location1.get_x + -1 * location1.get_y + line_func[2])) / math.sqrt(
             line_func[1]
             ^ 2 + 1)
+
+    def sum_of_distance_to_line(self, line, map_objects):
+        sum = 0
+        for map_object in map_objects:
+            sum += RangeUtills.range_from_line(self, location1=map_object.get_location(), line_func=line)
+        return sum
 
 
 class TurnHandler:

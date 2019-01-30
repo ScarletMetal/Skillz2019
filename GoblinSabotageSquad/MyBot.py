@@ -1,5 +1,7 @@
 from elf_kingdom import *
-import GoblinSabotageSquad.w_location as location
+import GoblinSabotageSquad.w_location as Location
+import range_utility
+import location_calculator
 import math
 
 ATTACK_PORTAL_LOCATION_ACCURACY = 20
@@ -9,9 +11,6 @@ class LocationCalculator:
     """
         this class is used to calculate some locations, currently the different defensive portals
     """
-
-    attack_portal_possible_locations = []
-    global attack_portal_possible_locations
 
     def __init__(self, my_castle_location, enemy_castle_location, first_portal_location):
         self.my_castle_location = my_castle_location
@@ -28,77 +27,12 @@ class LocationCalculator:
         col = int((self.my_castle_location.col + self.enemy_castle_location.col) / 2)
         return Location(row=row, col=col)
 
-    def get_location_on_castle_circle_by_x(self, castle, radius, x):
-        # Finds x for  R^2=(y-b)^2+*(x-a)^2, where (a,b) is the center
-        # Circle function
-
-        if x > radius or x < 0:
-            return None
-
-        y1 = math.sqrt(radius * radius - x * x + 2 *
-                       castle.get_location().get_x() * x - castle.get_location().get_x() *
-                       castle.get_location().get_x()) + castle.get_location().get_y()
-
-        y2 = -(math.sqrt(radius * radius - x * x + 2 *
-                         castle.get_location().get_x() * x - castle.get_location().get_x() *
-                         castle.get_location().get_x()) + castle.get_location().get_y())
-
-        if (y2 < 0):
-            return [Location(x, y1)]
-        elif (y1 < 0):
-            return [Location(x, y2)]
-        else:
-            return None
-
-    def create_line_by_locations(self, location1, location2):
-        m = (location1.get_y() - location2.get_y()) / (location1.get_x() - location2.get_x())
-        c = location1.get_y() - m * location1.get_x
-        return [m, c]
-
-    def find_intersections_line_circle(self, radius, castle, line):
-        m = line[0]
-        c = line[1]
-        a = castle.get_location().get_x()
-        b = castle.get_location().get_y()
-        x1 = (m * c - b * m + math.sqrt(
-            radius ^ 2 * m ^ 2 - a ^ 2 * m ^ 2 + 2 * a * b * m - 2 * a * m * c
-            + 2 * b * c + radius ^ 2 - b ^ 2 - c ^ 2) - a) / (
-                     -1 - m ^ 2)
-        x2 = -((m * c - b * m + math.sqrt(
-            radius ^ 2 * m ^ 2 - a ^ 2 * m ^ 2 + 2 * a * b * m - 2 * a * m * c
-            + 2 * b * c + radius ^ 2 - b ^ 2 - c ^ 2) + a) / (
-                       -1 - m ^ 2))
-        return [Location(x1, m * x1 + c), Location(x2, m * x2 + c)]
-
-    def calc_attack_portal_location(self, radius, castle, enemy_portals):
-        if (castle.get_location().get_x() - radius < 0):
-            x = 0
-        else:
-            x = castle.get_location().get_x() - radius
-        while (x < 2 * radius):
-            if (LocationCalculator.get_location_on_castle_circle_by_x(self, castle, radius, x) != None):
-                attack_portal_possible_locations.append(
-                    LocationCalculator.get_location_on_castle_circle_by_x(self, castle, radius, x))
-            x += ATTACK_PORTAL_LOCATION_ACCURACY
-
-        min = 0
-        for locations in attack_portal_possible_locations:
-            for location in locations:
-                sum = RangeUtills.sum_of_distance_to_line(RangeUtills(),
-                                                          LocationCalculator.create_line_by_locations(self, location,
-                                                                                                      castle.get_location()),
-                                                          enemy_portals)
-                if sum > min:
-                    return location
-
-        if (min <= 0):
-            return Location(5000, 5000) #INSERT DEFAULT LOCATION HERE
 
 
-class RangeUtills:
+class UtilityCommands:
 
     def __init__(self):
-        pass
+        pass;
 
     def enemy_units_in_range(self, target, rng, enemy_units):
         return filter(lambda unit: unit.distance(target) < rng, enemy_units)
@@ -118,17 +52,6 @@ class RangeUtills:
 
     def sort_by_range(self, map_objects, target):
         return sorted(map_objects, key=lambda map_object: map_object.distance(target))
-
-    def range_from_line(self, location1, line_func):
-        return (math.fabs(line_func[1] * location1.get_x + -1 * location1.get_y + line_func[2])) / math.sqrt(
-            line_func[1]
-            ^ 2 + 1)
-
-    def sum_of_distance_to_line(self, line, map_objects):
-        sum = 0
-        for map_object in map_objects:
-            sum += RangeUtills.range_from_line(self, location1=map_object.get_location(), line_func=line)
-        return sum
 
 
 class TurnHandler:
@@ -199,15 +122,15 @@ class TurnHandler:
         self.handle_elves()
 
     def portal_roles(self):
-        defensive_portals = RangeUtills.enemy_units_in_range(self.my_castle, 2500, self.my_portals)
+        defensive_portals = range_utility.enemy_units_in_range(self.my_castle, 2500, self.my_portals)
         for portal in defensive_portals:
             self.defensive_portal(portal)
-        middle_portals = RangeUtills.enemy_units_between_range(self.my_castle, 2500, 4000, self.my_portals)
+        middle_portals = range_utility.enemy_units_between_range(self.my_castle, 2500, 4000, self.my_portals)
         for portal in middle_portals:
             self.defensive_portal(portal)
             if not portal.already_acted:
                 self.offensive_portal(portal)
-        offensive_portals = RangeUtills.enemy_units_above_range(self.my_castle, 4000, self.my_portals)
+        offensive_portals = range_utility.enemy_units_above_range(self.my_castle, 4000, self.my_portals)
         for portal in offensive_portals:
             self.offensive_portal(portal)
 
@@ -231,11 +154,11 @@ class TurnHandler:
         portal_location = self.choose_offensive_portal_location()
         for portal in self.my_portals:
             if portal.location.distance(portal_location) < 100:
-                if not elf.in_attack_range(RangeUtills.sort_by_range(self.enemy_portals, elf)[0]):
-                    elf.move_to(RangeUtills.sort_by_range(self.enemy_portals, elf)[0])
+                if not elf.in_attack_range(range_utility.sort_by_range(self.enemy_portals, elf)[0]):
+                    elf.move_to(range_utility.sort_by_range(self.enemy_portals, elf)[0])
                     break
                 else:
-                    elf.attack(RangeUtills.sort_by_range(self.enemy_portals, elf)[0])
+                    elf.attack(range_utility.sort_by_range(self.enemy_portals, elf)[0])
                     break
             else:
                 if elf.location == portal_location:
@@ -295,7 +218,7 @@ class TurnHandler:
                     self.defensive_portal_locations_list.append(target)
         else:
             if len(self.enemy_structures) != 0:
-                closest_structure = RangeUtills.get_closest_to(elf, self.enemy_structures)
+                closest_structure = range_utility.get_closest_to(elf, self.enemy_structures)
                 if elf.in_attack_range(closest_structure):
                     elf.attack(closest_structure)
 
@@ -303,8 +226,8 @@ class TurnHandler:
                     elf.move_to(closest_structure)
 
     def defensive_portal(self, portal):
-        if len(RangeUtills.enemy_units_in_range(self.my_castle, 3000, self.enemy_creatures)) > len(
-                RangeUtills.enemy_units_in_range(self.my_castle, 3000,
+        if len(range_utility.enemy_units_in_range(self.my_castle, 3000, self.enemy_creatures)) > len(
+                range_utility.enemy_units_in_range(self.my_castle, 3000,
                                                  self.my_creatures)) and portal.can_summon_ice_troll():
             portal.summon_ice_troll()
 

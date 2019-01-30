@@ -76,3 +76,30 @@ def calc_attack_portal_location(radius, castle, enemy_portals):
     if max_sum <= 0:
         return None
         # INSERT DEFAULT LOCATION HERE
+
+
+def calc_defense_portal_location(radius, castle, enemy_portals):
+    global attack_portal_possible_locations
+    if castle.get_location().get_x() - radius < 0:
+        x = 50
+    else:
+        x = castle.get_location().get_x() - radius
+    while x < 2 * radius:
+        if get_location_on_castle_circle_by_x(castle, radius, x) != None:
+            attack_portal_possible_locations.append(
+                get_location_on_castle_circle_by_x(castle, radius, x))
+        x += ATTACK_PORTAL_LOCATION_ACCURACY
+
+    min_sum = 0
+    for locations in attack_portal_possible_locations:
+        for location1 in locations:
+            sum = range_utility.sum_of_distance_to_line(
+                create_line_by_locations(location1,
+                                         castle.get_location()),
+                enemy_portals)
+            if sum < min_sum:
+                return location1
+
+    if min_sum <= 0:
+        return None
+

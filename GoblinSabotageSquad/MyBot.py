@@ -29,7 +29,6 @@ class LocationCalculator:
 
 
 class UtilityCommands:
-
     def __init__(self):
         pass;
 
@@ -71,6 +70,10 @@ class TurnHandler:
 
         self.my_elves_by_role = {}
         self.defensive_portal_locations_list = []
+
+
+     def get_optimal_attack_portal_location(self):
+        pass
 
     """
         runs this function on the first turn on combat,

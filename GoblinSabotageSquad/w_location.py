@@ -1,4 +1,5 @@
-from elf_kingdom import *
+import elf_kingdom
+
 GAME_WIDTH = 0
 GAME_HEIGHT = 0
 
@@ -8,7 +9,7 @@ class LocationWrapper:
         if location is not None:
             self.location = location
         else:
-            self.location = Location(x, y)
+            self.location = elf_kingdom.Location(x, y)
 
     def __str__(self):
         return "({},{})".format(self.get_x(), self.get_y())

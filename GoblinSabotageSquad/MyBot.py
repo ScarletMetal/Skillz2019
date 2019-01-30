@@ -28,7 +28,6 @@ class LocationCalculator:
         return Location(row=row, col=col)
 
 
-
 class UtilityCommands:
 
     def __init__(self):
@@ -228,7 +227,7 @@ class TurnHandler:
     def defensive_portal(self, portal):
         if len(range_utility.enemy_units_in_range(self.my_castle, 3000, self.enemy_creatures)) > len(
                 range_utility.enemy_units_in_range(self.my_castle, 3000,
-                                                 self.my_creatures)) and portal.can_summon_ice_troll():
+                                                   self.my_creatures)) and portal.can_summon_ice_troll():
             portal.summon_ice_troll()
 
     def offensive_portal(self, portal):

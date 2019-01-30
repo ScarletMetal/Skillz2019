@@ -27,31 +27,6 @@ class LocationCalculator:
         col = int((self.my_castle_location.col + self.enemy_castle_location.col) / 2)
         return Location(row=row, col=col)
 
-
-class UtilityCommands:
-    def __init__(self):
-        pass;
-
-    def enemy_units_in_range(self, target, rng, enemy_units):
-        return filter(lambda unit: unit.distance(target) < rng, enemy_units)
-
-    def get_closest_to(self, source, targets):
-        closest = targets[0]
-        for target in targets:
-            if source.distance(target) < source.distance(closest):
-                closest = target
-        return closest
-
-    def enemy_units_between_range(self, target, rng1, rng2, enemy_units):
-        return filter(lambda unit: rng1 < unit.distance(target) < rng2, enemy_units)
-
-    def enemy_units_above_range(self, target, rng, enemy_units):
-        return filter(lambda unit: unit.distance(target) > rng, enemy_units)
-
-    def sort_by_range(self, map_objects, target):
-        return sorted(map_objects, key=lambda map_object: map_object.distance(target))
-
-
 class TurnHandler:
     def __init__(self):
         self.game = None
@@ -71,8 +46,7 @@ class TurnHandler:
         self.my_elves_by_role = {}
         self.defensive_portal_locations_list = []
 
-
-     def get_optimal_attack_portal_location(self):
+    def get_optimal_attack_portal_location(self):
         pass
 
     """

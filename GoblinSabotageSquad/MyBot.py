@@ -1,6 +1,8 @@
-import math
-
 from elf_kingdom import *
+import GoblinSabotageSquad.w_location as Location
+import range_utility
+import location_calculator
+import math
 
 ATTACK_PORTAL_LOCATION_ACCURACY = 20
 
@@ -25,31 +27,6 @@ class LocationCalculator:
         col = int((self.my_castle_location.col + self.enemy_castle_location.col) / 2)
         return Location(row=row, col=col)
 
-
-class UtilityCommands:
-    def __init__(self):
-        pass;
-
-    def enemy_units_in_range(self, target, rng, enemy_units):
-        return filter(lambda unit: unit.distance(target) < rng, enemy_units)
-
-    def get_closest_to(self, source, targets):
-        closest = targets[0]
-        for target in targets:
-            if source.distance(target) < source.distance(closest):
-                closest = target
-        return closest
-
-    def enemy_units_between_range(self, target, rng1, rng2, enemy_units):
-        return filter(lambda unit: rng1 < unit.distance(target) < rng2, enemy_units)
-
-    def enemy_units_above_range(self, target, rng, enemy_units):
-        return filter(lambda unit: unit.distance(target) > rng, enemy_units)
-
-    def sort_by_range(self, map_objects, target):
-        return sorted(map_objects, key=lambda map_object: map_object.distance(target))
-
-
 class TurnHandler:
     def __init__(self):
         self.game = None
@@ -67,7 +44,6 @@ class TurnHandler:
         self.my_mana = None
 
         self.my_elves_by_role = {}
-
         self.defensive_portal_locations_list = []
 
     def get_optimal_attack_portal_location(self):
@@ -122,15 +98,15 @@ class TurnHandler:
         self.handle_elves()
 
     def portal_roles(self):
-        defensive_portals = UtilityCommands.enemy_units_in_range(self.my_castle, 2500, self.my_portals)
+        defensive_portals = range_utility.enemy_units_in_range(self.my_castle, 2500, self.my_portals)
         for portal in defensive_portals:
             self.defensive_portal(portal)
-        middle_portals = UtilityCommands.enemy_units_between_range(self.my_castle, 2500, 4000, self.my_portals)
+        middle_portals = range_utility.enemy_units_between_range(self.my_castle, 2500, 4000, self.my_portals)
         for portal in middle_portals:
             self.defensive_portal(portal)
             if not portal.already_acted:
                 self.offensive_portal(portal)
-        offensive_portals = UtilityCommands.enemy_units_above_range(self.my_castle, 4000, self.my_portals)
+        offensive_portals = range_utility.enemy_units_above_range(self.my_castle, 4000, self.my_portals)
         for portal in offensive_portals:
             self.offensive_portal(portal)
 
@@ -154,11 +130,11 @@ class TurnHandler:
         portal_location = self.choose_offensive_portal_location()
         for portal in self.my_portals:
             if portal.location.distance(portal_location) < 100:
-                if not elf.in_attack_range(UtilityCommands.sort_by_range(self.enemy_portals, elf)[0]):
-                    elf.move_to(UtilityCommands.sort_by_range(self.enemy_portals, elf)[0])
+                if not elf.in_attack_range(range_utility.sort_by_range(self.enemy_portals, elf)[0]):
+                    elf.move_to(range_utility.sort_by_range(self.enemy_portals, elf)[0])
                     break
                 else:
-                    elf.attack(UtilityCommands.sort_by_range(self.enemy_portals, elf)[0])
+                    elf.attack(range_utility.sort_by_range(self.enemy_portals, elf)[0])
                     break
             else:
                 if elf.location == portal_location:
@@ -218,7 +194,7 @@ class TurnHandler:
                     self.defensive_portal_locations_list.append(target)
         else:
             if len(self.enemy_structures) != 0:
-                closest_structure = UtilityCommands.get_closest_to(elf, self.enemy_structures)
+                closest_structure = range_utility.get_closest_to(elf, self.enemy_structures)
                 if elf.in_attack_range(closest_structure):
                     elf.attack(closest_structure)
 
@@ -226,9 +202,9 @@ class TurnHandler:
                     elf.move_to(closest_structure)
 
     def defensive_portal(self, portal):
-        if len(UtilityCommands.enemy_units_in_range(self.my_castle, 3000, self.enemy_creatures)) > len(
-                UtilityCommands.enemy_units_in_range(self.my_castle, 3000,
-                                                     self.my_creatures)) and portal.can_summon_ice_troll():
+        if len(range_utility.enemy_units_in_range(self.my_castle, 3000, self.enemy_creatures)) > len(
+                range_utility.enemy_units_in_range(self.my_castle, 3000,
+                                                   self.my_creatures)) and portal.can_summon_ice_troll():
             portal.summon_ice_troll()
 
     def offensive_portal(self, portal):

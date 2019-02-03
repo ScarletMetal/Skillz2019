@@ -1,6 +1,7 @@
 import math
-from w_location import LocationWrapper as Location
+
 import range_utility
+from w_location import LocationWrapper as Location
 
 ATTACK_PORTAL_LOCATION_ACCURACY = 20
 attack_portal_possible_locations = []
@@ -43,11 +44,11 @@ def find_intersections_line_circle(radius, castle, line):
     x1 = (m * c - b * m + math.sqrt(
         radius ^ 2 * m ^ 2 - a ^ 2 * m ^ 2 + 2 * a * b * m - 2 * a * m * c
         + 2 * b * c + radius ^ 2 - b ^ 2 - c ^ 2) - a) / (
-                 -1 - m ^ 2)
+             -1 - m ^ 2)
     x2 = -((m * c - b * m + math.sqrt(
         radius ^ 2 * m ^ 2 - a ^ 2 * m ^ 2 + 2 * a * b * m - 2 * a * m * c
         + 2 * b * c + radius ^ 2 - b ^ 2 - c ^ 2) + a) / (
-                   -1 - m ^ 2))
+               -1 - m ^ 2))
     return [Location(x1, m * x1 + c), Location(x2, m * x2 + c)]
 
 
@@ -102,4 +103,3 @@ def calc_defense_portal_location(radius, castle, enemy_portals):
 
     if min_sum <= 0:
         return None
-

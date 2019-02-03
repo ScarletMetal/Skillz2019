@@ -1,4 +1,3 @@
-from elf_kingdom import *
 from w_location import LocationWrapper
 
 

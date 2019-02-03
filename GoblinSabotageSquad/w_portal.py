@@ -1,6 +1,3 @@
-from elf_kingdom import *
-
-
 class PortalWrapper:
     """
         this class is a wrapper for portal.

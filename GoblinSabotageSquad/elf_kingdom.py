@@ -346,8 +346,8 @@ _hx_classes[u"EReg"] = EReg
 class Elf(GameObject):
     _hx_class_name = u"Elf"
     __slots__ = (
-    u"attack_range", u"attack_multiplier", u"max_speed", u"turns_to_revive", u"spawn_turns", u"is_building",
-    u"currently_building")
+        u"attack_range", u"attack_multiplier", u"max_speed", u"turns_to_revive", u"spawn_turns", u"is_building",
+        u"currently_building")
     _hx_fields = [u"attack_range", u"attack_multiplier", u"max_speed", u"turns_to_revive", u"spawn_turns",
                   u"is_building", u"currently_building"]
     _hx_methods = [u"in_attack_range", u"attack", u"move_to", u"enoughManaToBuild", u"is_alive", u"build_portal",
@@ -367,27 +367,28 @@ class Elf(GameObject):
 
     def in_attack_range(self, mapObject):
         size = (Reflect.field(mapObject, u"size") if (hasattr(mapObject, (
-        (u"_hx_" + u"size") if ((u"size" in python_Boot.keywords)) else ((u"_hx_" + u"size") if (((((len(
-            u"size") > 2) and ((ord(u"size"[0]) == 95))) and ((ord(u"size"[1]) == 95))) and ((ord(
-            u"size"[(len(u"size") - 1)]) != 95)))) else u"size")))) else (Reflect.field(mapObject, u"Size") if (
-        hasattr(mapObject, ((u"_hx_" + u"Size") if ((u"Size" in python_Boot.keywords)) else ((u"_hx_" + u"Size") if ((((
-                                                                                                                       (
-                                                                                                                       len(
-                                                                                                                           u"Size") > 2) and (
-                                                                                                                       (
+            (u"_hx_" + u"size") if ((u"size" in python_Boot.keywords)) else ((u"_hx_" + u"size") if (((((len(
+                u"size") > 2) and ((ord(u"size"[0]) == 95))) and ((ord(u"size"[1]) == 95))) and ((ord(
+                u"size"[(len(u"size") - 1)]) != 95)))) else u"size")))) else (Reflect.field(mapObject, u"Size") if (
+            hasattr(mapObject,
+                    ((u"_hx_" + u"Size") if ((u"Size" in python_Boot.keywords)) else ((u"_hx_" + u"Size") if ((((
+                                                                                                                    (
+                                                                                                                        len(
+                                                                                                                            u"Size") > 2) and (
+                                                                                                                        (
+                                                                                                                            ord(
+                                                                                                                                u"Size"[
+                                                                                                                                    0]) == 95))) and (
+                                                                                                                    (
+                                                                                                                        ord(
+                                                                                                                            u"Size"[
+                                                                                                                                1]) == 95))) and (
+                                                                                                                   (
                                                                                                                        ord(
                                                                                                                            u"Size"[
-                                                                                                                               0]) == 95))) and (
-                                                                                                                       (
-                                                                                                                       ord(
-                                                                                                                           u"Size"[
-                                                                                                                               1]) == 95))) and (
-                                                                                                                      (
-                                                                                                                      ord(
-                                                                                                                          u"Size"[
-                                                                                                                              (
-                                                                                                                              len(
-                                                                                                                                  u"Size") - 1)]) != 95)))) else u"Size")))) else 0))
+                                                                                                                               (
+                                                                                                                                   len(
+                                                                                                                                       u"Size") - 1)]) != 95)))) else u"Size")))) else 0))
         return self.in_range(mapObject, (self.attack_range + size))
 
     def attack(self, target):
@@ -1174,15 +1175,18 @@ _hx_classes[u"ObjectParser"] = ObjectParser
 class Game(BaseObject):
     _hx_class_name = u"Game"
     __slots__ = (
-    u"_hx___players", u"_hx___turnTime", u"_hx___turnStartTime", u"_hx___numPlayers", u"_hx___recoverErrors",
-    u"_runnerFullStacktrace", u"max_points", u"max_turns", u"turn", u"_hx___me", u"_hx___enemies", u"_hx___orders",
-    u"_hx___nativeAPI", u"_hx___orderLines", u"ice_troll_attack_range", u"ice_troll_attack_multiplier",
-    u"lava_giant_attack_range", u"lava_giant_attack_multiplier", u"elf_attack_range", u"elf_attack_multiplier",
-    u"elf_max_health", u"portal_max_health", u"lava_giant_max_health", u"ice_troll_max_health", u"castle_max_health",
-    u"castle_size", u"portal_size", u"lava_giant_max_speed", u"ice_troll_max_speed", u"elf_max_speed",
-    u"lava_giant_suffocation_per_turn", u"ice_troll_suffocation_per_turn", u"_hx___buildings", u"default_mana_per_turn",
-    u"_hx___castles", u"rows", u"cols", u"elf_spawn_turns", u"_hx___portal", u"portal_cost", u"lava_giant_cost",
-    u"ice_troll_cost", u"portal_building_duration", u"ice_troll_summoning_duration", u"lava_giant_summoning_duration")
+        u"_hx___players", u"_hx___turnTime", u"_hx___turnStartTime", u"_hx___numPlayers", u"_hx___recoverErrors",
+        u"_runnerFullStacktrace", u"max_points", u"max_turns", u"turn", u"_hx___me", u"_hx___enemies", u"_hx___orders",
+        u"_hx___nativeAPI", u"_hx___orderLines", u"ice_troll_attack_range", u"ice_troll_attack_multiplier",
+        u"lava_giant_attack_range", u"lava_giant_attack_multiplier", u"elf_attack_range", u"elf_attack_multiplier",
+        u"elf_max_health", u"portal_max_health", u"lava_giant_max_health", u"ice_troll_max_health",
+        u"castle_max_health",
+        u"castle_size", u"portal_size", u"lava_giant_max_speed", u"ice_troll_max_speed", u"elf_max_speed",
+        u"lava_giant_suffocation_per_turn", u"ice_troll_suffocation_per_turn", u"_hx___buildings",
+        u"default_mana_per_turn",
+        u"_hx___castles", u"rows", u"cols", u"elf_spawn_turns", u"_hx___portal", u"portal_cost", u"lava_giant_cost",
+        u"ice_troll_cost", u"portal_building_duration", u"ice_troll_summoning_duration",
+        u"lava_giant_summoning_duration")
     _hx_fields = [u"__players", u"__turnTime", u"__turnStartTime", u"__numPlayers", u"__recoverErrors",
                   u"_runnerFullStacktrace", u"max_points", u"max_turns", u"turn", u"__me", u"__enemies", u"__orders",
                   u"__nativeAPI", u"__orderLines", u"ice_troll_attack_range", u"ice_troll_attack_multiplier",
@@ -1268,12 +1272,12 @@ class Game(BaseObject):
                     data = (dataArray[_g] if _g >= 0 and _g < len(dataArray) else None)
                     _g = (_g + 1)
                     stringData = ((u"null" if stringData is None else stringData) + HxOverrides.stringOrNull(((((
-                                                                                                                u"\nfile : " + HxOverrides.stringOrNull(
-                                                                                                                    data.file)) + u" line : ") + Std.string(
+                                                                                                                    u"\nfile : " + HxOverrides.stringOrNull(
+                                                                                                                        data.file)) + u" line : ") + Std.string(
                         data.line)))))
                 self._hx___nativeAPI.writeLine((((u"All orders of " + Std.string(
                     obj1)) + u" are ignored because acted multiple times.Acted at : ") + (
-                                                u"null" if stringData is None else stringData)))
+                                                    u"null" if stringData is None else stringData)))
 
     def _nextTurn(self, objectsData):
         self._hx___turnStartTime = self._hx___nativeAPI.getCurrentTime()
@@ -1295,7 +1299,7 @@ class Game(BaseObject):
         if (args is None):
             args = u""
         order = ((((((u"{\"order_type\": \"" + (
-        u"null" if orderType is None else orderType)) + u"\", \"actor\": ") + Std.string(
+            u"null" if orderType is None else orderType)) + u"\", \"actor\": ") + Std.string(
             actor.unique_id)) + u", \"order_args\": {") + (u"null" if args is None else args)) + u"}}")
         _this = self._hx___orders
         _this.append(order)
@@ -1897,7 +1901,7 @@ class Std(object):
         isClassType = (t == Class)
         if ((((isClassType and (not isinstance(v, Enum))) and python_lib_Inspect.isclass(v)) and hasattr(v,
                                                                                                          u"_hx_class_name")) and (
-        not hasattr(v, u"_hx_constructs"))):
+                not hasattr(v, u"_hx_constructs"))):
             return True
         if isClassType:
             return False
@@ -2386,7 +2390,7 @@ class python_Boot(object):
                 if (i > 0):
                     prefix = u","
                 st = ((u"null" if st is None else st) + HxOverrides.stringOrNull((((
-                                                                                   u"null" if prefix is None else prefix) + HxOverrides.stringOrNull(
+                                                                                       u"null" if prefix is None else prefix) + HxOverrides.stringOrNull(
                     python_Boot.toString1((o1[i] if i >= 0 and i < len(o1) else None), s))))))
             st = ((u"null" if st is None else st) + u"]")
             return st
@@ -2437,10 +2441,11 @@ class python_Boot(object):
                         if (i1 > 0):
                             prefix1 = u","
                         paramsStr = ((u"null" if paramsStr is None else paramsStr) + HxOverrides.stringOrNull((((
-                                                                                                                u"null" if prefix1 is None else prefix1) + HxOverrides.stringOrNull(
+                                                                                                                    u"null" if prefix1 is None else prefix1) + HxOverrides.stringOrNull(
                             python_Boot.toString1((o2.params[i1] if i1 >= 0 and i1 < len(o2.params) else None), s))))))
                     return (
-                    ((HxOverrides.stringOrNull(o2.tag) + u"(") + (u"null" if paramsStr is None else paramsStr)) + u")")
+                        ((HxOverrides.stringOrNull(o2.tag) + u"(") + (
+                        u"null" if paramsStr is None else paramsStr)) + u")")
                 else:
                     return o2.tag
             if hasattr(o, u"_hx_class_name"):
@@ -2913,7 +2918,8 @@ class python_internal_ArrayImpl(object):
     def lastIndexOf(a, x, fromIndex=None):
         _hx_len = len(a)
         l = (
-        _hx_len if ((fromIndex is None)) else (((_hx_len + fromIndex) + 1) if ((fromIndex < 0)) else (fromIndex + 1)))
+            _hx_len if ((fromIndex is None)) else (
+            ((_hx_len + fromIndex) + 1) if ((fromIndex < 0)) else (fromIndex + 1)))
         if (l > _hx_len):
             l = _hx_len
         while True:

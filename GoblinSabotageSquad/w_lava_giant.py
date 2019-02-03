@@ -1,6 +1,3 @@
-from elf_kingdom import *
-
-
 class LavaGiantWrapper:
     """
         this class is a wrapper for castle.

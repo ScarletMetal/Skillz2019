@@ -1,5 +1,10 @@
 from elf_kingdom import *
-import GoblinSabotageSquad.w_location as Location
+import GoblinSabotageSquad.w_location as w_location
+import GoblinSabotageSquad.w_castle as w_castle
+import GoblinSabotageSquad.w_portal as w_portal
+import GoblinSabotageSquad.w_elf as w_elf
+import GoblinSabotageSquad.w_enemy_unit as w_enemy_unit
+import GoblinSabotageSquad.w_LavaGiant as w_LavaGiant
 import range_utility
 import location_calculator
 import math
@@ -71,8 +76,24 @@ class TurnHandler:
         runs this function every turn
     """
 
+    def wrap_gameobjects(self, game_objects):
+        wrapped_list = []
+        for game_object in game_objects:
+            if(type(Castle, game_object)):
+                wrapped_list.append(w_castle.CastleWrapper(game_object))
+            if (type(Elf, game_object)):
+                wrapped_list.append(w_elf.ElfWrapper(game_object, None))
+            if(type(LavaGiant, game_object)):
+                wrapped_list.append(w_LavaGiant.LavaGiant_Wrapper(game_object))
+            if(type(Portal, game_object)):
+                wrapped_list.append((w_portal.Portal_Wrapper(game_object),None))
+        return wrapped_list
+
+
+
+
     def do_turn(self, game):
-        self.enemy_castle = game.get_enemy_castle()
+        self.enemy_castle = game.get_my_castle()
         self.my_living_elves = game.get_my_living_elves()
         self.my_portals = game.get_my_portals()
         self.my_castle = game.get_my_castle()
@@ -144,41 +165,6 @@ class TurnHandler:
                 else:
                     elf.move_to(portal_location)
                     break
-
-    def is_closest_enemy_building_castle(self, offensive_portal_location):
-        closest_building = self.enemy_castle
-        for Portal in self.enemy_portals:
-            if Portal.distance(offensive_portal_location) < closest_building.distance(offensive_portal_location):
-                return False
-
-        return True
-
-    def choose_offensive_portal_location(self):
-        radius = 1700
-        potential_locations = []
-        average_distance = 0
-        optimal_location = Location(1000, 1000)
-
-        opt_x = self.enemy_castle.location.col
-        while opt_x < self.enemy_castle.location.col + radius:
-            location = Location(opt_x, math.sqrt(
-                -opt_x ^ 2 - 2 * opt_x * self.enemy_castle.location.row - self.enemy_castle.location.row ^ 2 + radius ^ 2) + self.enemy_castle.location.col)
-            if self.is_closest_enemy_building_castle(location):
-                potential_locations.append(location)
-            opt_x += 1
-        opt_location_distance_average = 0
-        if potential_locations.__len__() != 0:
-            optimal_location = potential_locations[0]
-        for opt_location in potential_locations:
-            for enemy_portal in self.enemy_portals:
-                average_distance += opt_location.distance(enemy_portal)
-            if self.enemy_portals.__len__() != 0:
-                average_distance /= self.enemy_portals.__len__()
-            if average_distance < opt_location_distance_average:
-                opt_location_distance_average = average_distance
-                optimal_location = opt_location
-
-        return optimal_location
 
     def handle_defender_elf(self, elf):
         if len(self.defensive_portal_locations_list) != 0:

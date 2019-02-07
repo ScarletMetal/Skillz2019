@@ -37,3 +37,11 @@ def sum_of_distance_to_line(line, map_objects):
     for map_object in map_objects:
         sum += range_from_line(location1=map_object.get_location(), line_func=line)
     return sum
+
+
+def is_closest_enemy_building_castle(self, offensive_portal_location):
+    closest_building = self.enemy_castle
+    for Portal in self.enemy_portals:
+        if Portal.distance(offensive_portal_location) < closest_building.distance(offensive_portal_location):
+            return False
+    return True

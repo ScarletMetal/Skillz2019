@@ -1,11 +1,9 @@
-from elf_kingdom import *
 
 
 class Role:
     """
 
     """
-    global role
     role = None
 
     def __init__(self, role):
@@ -19,43 +17,21 @@ class Role:
         return self.role
 
     def compare(self, roleB):
-        if (roleB == self):
-            return True
-        else:
-            return False
-
+        return roleB == self.role
     def isAttacker(self):
-        global role
-        if(role == "Attacker"):
-            return True
-        return False
+        return self.role == "Attacker"
 
     def isDefender(self):
-        global role
-        if(role == "Defender"):
-            return True
-        return False
+        return self.role == "Defender"
 
     def isReserve(self):
-        global role
-        if(role == "Reserve"):
-            return True
-        return False
+        return self.role == "Reserve"
 
     def isPortal(self):
-        global role
-        if(role == "Portal"):
-            return True
-        return False
+        return self.role == "Portal"
 
     def isCannibal(self):
-        global role
-        if(role == "Cannibal"):
-            return True
-        return False
+        return self.role == "Cannibal"
 
     def isDestroyer(self):
-        global role
-        if(role == "Destroyer"):
-            return True
-        return False
+        return self.role == "Destroyer"

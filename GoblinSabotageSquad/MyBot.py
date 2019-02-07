@@ -20,6 +20,9 @@ class TurnHandler:
         self.my_creatures = None
         self.my_mana = None
 
+        self.attacker_elves = []
+        self.defender_elves = []
+
     def wrap_game_data(self, game):
         self.game = game
 
@@ -37,6 +40,14 @@ class TurnHandler:
     def do_turn(self, game):
         self.wrap_game_data(game)
 
+    def handle_elves(self):
+        self.allocate_elves()
+
+        map(lambda elf: elf.act_defender(), self.defender_elves)
+        map(lambda elf: elf.act_attacker(), self.attacker_elves)
+
+    def allocate_elves(self):
+        pass
 
 handler = TurnHandler()
 

@@ -10,28 +10,28 @@ class Role:
         self.role = role
 
 
-    def setRole(self, role):
+    def set_role(self, role):
         self.role =  role
 
-    def getRole(self):
+    def get_role(self):
         return self.role
 
     def compare(self, roleB):
         return roleB == self.role
-    def isAttacker(self):
+    def is_attacker(self):
         return self.role == "Attacker"
 
-    def isDefender(self):
+    def is_defender(self):
         return self.role == "Defender"
 
-    def isReserve(self):
+    def is_reserve(self):
         return self.role == "Reserve"
 
-    def isPortal(self):
+    def is_portal(self):
         return self.role == "Portal"
 
-    def isCannibal(self):
+    def is_cannibal(self):
         return self.role == "Cannibal"
 
-    def isDestroyer(self):
+    def is_destroyer(self):
         return self.role == "Destroyer"

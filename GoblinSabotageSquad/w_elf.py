@@ -28,3 +28,15 @@ class ElfWrapper:
 
     def act_defender(self, **context):
         pass
+
+    def act_portal(self):
+        pass
+
+    def act_cannibal(self):
+        pass
+
+    def act_reserve(self):
+        pass
+
+    def act_destroyer(self):
+        pass

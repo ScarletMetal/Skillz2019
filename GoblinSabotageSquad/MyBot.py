@@ -1,52 +1,23 @@
-from elf_kingdom import *
-import GoblinSabotageSquad.w_location as w_location
-import GoblinSabotageSquad.w_castle as w_castle
-import GoblinSabotageSquad.w_portal as w_portal
-import GoblinSabotageSquad.w_elf as w_elf
-import GoblinSabotageSquad.w_enemy_unit as w_enemy_unit
-import GoblinSabotageSquad.w_LavaGiant as w_LavaGiant
-import range_utility
-import location_calculator
-import math
+from w_castle import CastleWrapper
+from w_elf import ElfWrapper
+from w_ice_troll import IceTrollWrapper
+from w_lava_giant import LavaGiantWrapper
+from w_portal import PortalWrapper
 
 ATTACK_PORTAL_LOCATION_ACCURACY = 20
-
-
-class LocationCalculator:
-    """
-        this class is used to calculate some locations, currently the different defensive portals
-    """
-
-    def __init__(self, my_castle_location, enemy_castle_location, first_portal_location):
-        self.my_castle_location = my_castle_location
-        self.enemy_castle_location = enemy_castle_location
-        self.first_portal_location = first_portal_location
-
-    def calculate_second_def_portal_location(self):
-        q = self.first_portal_location.row - self.my_castle_location.row
-        t = self.first_portal_location.col - self.my_castle_location.col
-        return Location(self.my_castle_location.row + t, self.my_castle_location.col - abs(q))
-
-    def calculate_third_portal_location(self):
-        row = int((self.my_castle_location.row + self.enemy_castle_location.row) / 2)
-        col = int((self.my_castle_location.col + self.enemy_castle_location.col) / 2)
-        return Location(row=row, col=col)
 
 
 class TurnHandler:
     def __init__(self):
         self.game = None
         self.enemy_castle = None
-        self.my_living_elves = None
-        self.my_portals = None
-        self.enemy_castle = None
-        self.first_portal = None
         self.enemy_portals = None
+        self.my_portals = None
+        self.my_living_elves = None
+        self.my_ice_trolls = None
+        self.my_lava_giants = None
         self.my_castle = None
         self.my_creatures = None
-        self.my_elves_by_id = {}
-        self.my_portals_by_id = {}
-
         self.my_mana = None
 
         self.my_elves_by_role = {}
@@ -70,12 +41,34 @@ class TurnHandler:
         self.my_living_elves = self.wrap_gameobjects(game.get_my_living_elves())
         self.my_portals = self.wrap_gameobjects(game.get_my_portals())
         self.my_castle = self.wrap_gameobjects(game.get_my_castle())
-        self.my_mana = game.get_my_mana()
-        self.enemy_portals = self.wrap_gameobjects(game.get_enemy_portals())
-        self.enemy_creatures = self.wrap_gameobjects((game.get_enemy_creatures(), game.get_enemy_living_elves()))
-        self.enemy_portals = self.wrap_gameobjects(game.get_enemy_portals())
-        self.my_creatures = self.wrap_gameobjects(game.get_my_creatures())
+        self.attacker_elves = []
+        self.defender_elves = []
 
+    def wrap_game_data(self, game):
+        self.game = game
+
+        self.enemy_castle = CastleWrapper(game.get_enemy_castle())
+        self.enemy_portals = map(lambda portal: PortalWrapper(portal), game.get_enemy_portals())
+
+        self.my_portals = map(lambda portal: PortalWrapper(portal, "none"), game.get_my_portals())
+        self.my_living_elves = map(lambda elf: ElfWrapper(elf, "none"), game.get_my_living_elves())
+        self.my_castle = CastleWrapper(game.get_my_castle())
+        self.my_lava_giants = map(lambda giant: LavaGiantWrapper(giant), game.get_my_lava_giants())
+        self.my_ice_trolls = map(lambda troll: IceTrollWrapper(troll), game.get_my_ice_trolls())
+        self.my_creatures = self.my_lava_giants + self.my_ice_trolls + self.my_living_elves
+        self.my_mana = game.get_my_mana()
+
+    def do_turn(self, game):
+        self.wrap_game_data(game)
+
+    def handle_elves(self):
+        self.allocate_elves()
+
+        map(lambda elf: elf.act_defender(), self.defender_elves)
+        map(lambda elf: elf.act_attacker(), self.attacker_elves)
+
+    def allocate_elves(self):
+        pass
 
 handler = TurnHandler()
 

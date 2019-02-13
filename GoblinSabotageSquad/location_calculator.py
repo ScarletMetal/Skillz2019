@@ -103,3 +103,7 @@ def calc_defense_portal_location(radius, castle, enemy_portals):
 
     if min_sum <= 0:
         return None
+
+
+def calc_managen_location():
+    pass

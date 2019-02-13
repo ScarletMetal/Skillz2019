@@ -62,7 +62,7 @@ class TurnHandler:
             if(type(LavaGiant, game_object)):
                 wrapped_list.append(w_LavaGiant.LavaGiant_Wrapper(game_object))
             if(type(Portal, game_object)):
-                wrapped_list.append((w_portal.Portal_Wrapper(game_object),None))
+                wrapped_list.append((w_portal.Portal_Wrapper(game_object,None)))
         return wrapped_list
 
     def do_turn(self, game):

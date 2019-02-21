@@ -28,22 +28,25 @@ class ElfWrapper:
     def move_to(self, location):
         self.elf.move_to(location.location)
 
-    def act_attacker(self, castle, enemy_portals, **context):
-        if self.get_location() == location_calculator.calc_attack_portal_location(castle, self.ATTACK_PORTAL_RADIUS,
+    def act_attacker(self, enemy_castle, enemy_portals, **context):
+        if self.get_location() == location_calculator.calc_attack_portal_location(enemy_castle,
+                                                                                  self.ATTACK_PORTAL_RADIUS,
                                                                                   enemy_portals) and self.elf.can_build_portal():
             self.elf.build_portal()
         else:
-            self.move_to(location_calculator.calc_attack_portal_location(castle, self.ATTACK_PORTAL_RADIUS,
+            self.move_to(location_calculator.calc_attack_portal_location(enemy_castle, self.ATTACK_PORTAL_RADIUS,
                                                                          enemy_portals))
 
-    def act_defender(self, castle, enemy_portals, managens):
+    def act_defender(self, castle, enemy_portals, mana_fountains):
         if self.get_location() == location_calculator.calc_defense_portal_location(self.DEFENSE_PORTAL_RADIUS,
                                                                                    castle,
-                                                                                   enemy_portals,managens) and self.elf.can_build_portal():
+                                                                                   enemy_portals,
+                                                                                   mana_fountains) and self.elf.can_build_portal():
             self.elf.build_portal()
         else:
             self.move_to(
-                location_calculator.calc_defense_portal_location(self.DEFENSE_PORTAL_RADIUS, castle, enemy_portals))
+                location_calculator.calc_defense_portal_location(self.DEFENSE_PORTAL_RADIUS, castle, enemy_portals,
+                                                                 mana_fountains))
 
     def act_mana_fountain(self, castle, enemy_castle, mana_fountains):
         if self.get_location() == location_calculator.calc_managen_location(self.MANAGEN_RADIUS, castle,

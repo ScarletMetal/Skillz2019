@@ -61,6 +61,13 @@ class TurnHandler:
 
     def handle_elves(self):
         self.allocate_elves()
+        for elf in self.my_living_elves:
+            if elf.role == "mana_fountain":
+                elf.act_mana_fountain(self.my_castle, self.enemy_castle, self.my_mana_fountains)
+            if elf.role == "attacker":
+                elf.act_attacker(self.enemy_castle, self.enemy_portals)
+            if elf.role == "defender":
+                elf.act_defender(self.my_castle, self.enemy_portals, self.my_mana_fountains)
 
     def allocate_elves(self):
         for elf in self.my_living_elves:
@@ -78,6 +85,10 @@ class TurnHandler:
                     elf.role = "defender"
                 if not self.attack_elf_exists() and not self.attack_portal_exists():
                     elf.role = "attacker"
+
+    def allocate_portal(self):
+        for portal in self.my_portals:
+            pass
 
 
 handler = TurnHandler()

@@ -14,6 +14,6 @@ class PortalWrapper:
         if len(mana_fountains) >= 2 and self.portal.can_summon_lava_giant():
             self.portal.summon_lava_giant()
 
-    def defense(self, enemy_units, my_ice_trolls):
+    def defend(self, enemy_units, my_ice_trolls):
         if len(enemy_units) > len(my_ice_trolls) and self.portal.can_summon_ice_troll():
             self.portal.summon_ice_troll()

@@ -88,7 +88,11 @@ class TurnHandler:
 
     def allocate_portal(self):
         for portal in self.my_portals:
-            pass
+            if portal.get_location().distance_to(self.enemy_castle) < 2000:
+                portal.role = "attack"
+            if portal.get_location().distance_to(self.my_castle) < 3000:
+                portal.role = "defense"
+
 
 
 handler = TurnHandler()

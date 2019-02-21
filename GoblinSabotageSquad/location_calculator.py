@@ -3,8 +3,7 @@ import math
 import range_utility
 from w_location import LocationWrapper as Location
 
-ATTACK_PORTAL_LOCATION_ACCURACY = 20
-attack_portal_possible_locations = []
+LOCATION_CALC_ACCURACY = 20
 
 
 def get_location_on_castle_circle_by_x(castle, radius, x):
@@ -53,7 +52,7 @@ def find_intersections_line_circle(radius, castle, line):
 
 
 def calc_attack_portal_location(radius, castle, enemy_portals):
-    global attack_portal_possible_locations
+    attack_portal_possible_locations = []
     if castle.get_location().get_x() - radius < 0:
         x = 0
     else:
@@ -62,7 +61,7 @@ def calc_attack_portal_location(radius, castle, enemy_portals):
         if get_location_on_castle_circle_by_x(castle, radius, x) != None:
             attack_portal_possible_locations.append(
                 get_location_on_castle_circle_by_x(castle, radius, x))
-        x += ATTACK_PORTAL_LOCATION_ACCURACY
+        x += LOCATION_CALC_ACCURACY
 
     max_sum = 0
     for locations in attack_portal_possible_locations:
@@ -79,27 +78,58 @@ def calc_attack_portal_location(radius, castle, enemy_portals):
         # INSERT DEFAULT LOCATION HERE
 
 
-def calc_defense_portal_location(radius, castle, enemy_portals):
-    global attack_portal_possible_locations
+def calc_defense_portal_location(radius, castle, enemy_portals, mana_fountains):
+    defense_portal_possible_locations = []
     if castle.get_location().get_x() - radius < 0:
         x = 50
     else:
         x = castle.get_location().get_x() - radius
     while x < 2 * radius:
         if get_location_on_castle_circle_by_x(castle, radius, x) != None:
-            attack_portal_possible_locations.append(
+            defense_portal_possible_locations.append(
                 get_location_on_castle_circle_by_x(castle, radius, x))
-        x += ATTACK_PORTAL_LOCATION_ACCURACY
+        x += LOCATION_CALC_ACCURACY
 
     min_sum = 0
-    for locations in attack_portal_possible_locations:
+    for locations in defense_portal_possible_locations:
         for location1 in locations:
             sum = range_utility.sum_of_distance_to_line(
                 create_line_by_locations(location1,
                                          castle.get_location()),
-                enemy_portals)
+                enemy_portals) + range_utility.sum_of_distance_to_line(
+                create_line_by_locations(location1,
+                                         castle.get_location()),
+                mana_fountains)
             if sum < min_sum:
                 return location1
 
     if min_sum <= 0:
+        return None
+
+
+def calc_managen_location(radius, castle, enemy_castle, mana_fountains):
+    managen_possible_locations = []
+    if castle.get_location().get_x() - radius < 0:
+        x = castle.get_location().get_x() - radius
+        while x < 0:
+            x = x + 1
+    else:
+        x = castle.get_location().get_x() - radius
+    while x < 2 * radius:
+        if get_location_on_castle_circle_by_x(castle, radius, x) != None:
+            managen_possible_locations.append(
+                get_location_on_castle_circle_by_x(castle, radius, x))
+        x += LOCATION_CALC_ACCURACY
+
+    max_sum = 0
+    for locations in managen_possible_locations:
+        for location1 in locations:
+            sum = range_utility.sum_of_distance_to_line(
+                create_line_by_locations(location1,
+                                         castle.get_location()),
+                enemy_castle+mana_fountains)
+            if sum > max_sum:
+                return location1
+
+    if max_sum <= 0:
         return None

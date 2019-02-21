@@ -78,7 +78,7 @@ def calc_attack_portal_location(radius, castle, enemy_portals):
         # INSERT DEFAULT LOCATION HERE
 
 
-def calc_defense_portal_location(radius, castle, enemy_portals, managens):
+def calc_defense_portal_location(radius, castle, enemy_portals, mana_fountains):
     defense_portal_possible_locations = []
     if castle.get_location().get_x() - radius < 0:
         x = 50
@@ -99,7 +99,7 @@ def calc_defense_portal_location(radius, castle, enemy_portals, managens):
                 enemy_portals) + range_utility.sum_of_distance_to_line(
                 create_line_by_locations(location1,
                                          castle.get_location()),
-                managens)
+                mana_fountains)
             if sum < min_sum:
                 return location1
 
@@ -107,7 +107,7 @@ def calc_defense_portal_location(radius, castle, enemy_portals, managens):
         return None
 
 
-def calc_managen_location(radius, castle, enemy_castle, managens):
+def calc_managen_location(radius, castle, enemy_castle, mana_fountains):
     managen_possible_locations = []
     if castle.get_location().get_x() - radius < 0:
         x = castle.get_location().get_x() - radius
@@ -127,7 +127,7 @@ def calc_managen_location(radius, castle, enemy_castle, managens):
             sum = range_utility.sum_of_distance_to_line(
                 create_line_by_locations(location1,
                                          castle.get_location()),
-                enemy_castle+managens)
+                enemy_castle+mana_fountains)
             if sum > max_sum:
                 return location1
 

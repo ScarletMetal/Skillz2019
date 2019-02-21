@@ -45,15 +45,15 @@ class ElfWrapper:
             self.move_to(
                 location_calculator.calc_defense_portal_location(self.DEFENSE_PORTAL_RADIUS, castle, enemy_portals))
 
-    def act_managen(self, castle, enemy_castle, managens):
+    def act_mana_fountain(self, castle, enemy_castle, mana_fountains):
         if self.get_location() == location_calculator.calc_managen_location(self.MANAGEN_RADIUS, castle,
                                                                             enemy_castle,
-                                                                            managens) and self.elf.can_build_mana_fountain():
+                                                                            mana_fountains) and self.elf.can_build_mana_fountain():
             self.elf.build_mana_fountain()
         else:
             self.move_to(location_calculator.calc_managen_location(self.MANAGEN_RADIUS, castle,
                                                                    enemy_castle,
-                                                                   managens))
+                                                                   mana_fountains))
 
     def act_portal(self):
         pass

@@ -9,3 +9,6 @@ class PortalWrapper:
 
     def get_role(self):
         return self.role
+
+    def attack(self):
+        pass

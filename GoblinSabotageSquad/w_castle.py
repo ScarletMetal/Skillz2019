@@ -9,6 +9,9 @@ class CastleWrapper:
     def __init__(self, castle):
         self.castle = castle
 
+    def current_health(self):
+        return self.castle.current_health
+
     def get_location(self):
         return LocationWrapper(self.castle.location)
 

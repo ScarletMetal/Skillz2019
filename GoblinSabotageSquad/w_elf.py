@@ -22,3 +22,18 @@ class ElfWrapper:
 
     def move_to(self, location):
         self.elf.move_to(location.location)
+
+    def act_attacker(self, **context):
+        pass
+
+    def act_defender(self, **context):
+        pass
+
+    def act_portal(self):
+        pass
+
+    def act_cannibal(self):
+        pass
+
+    def act_destroyer(self):
+        pass

@@ -1,80 +1,83 @@
 from elf_kingdom import *
-import GoblinSabotageSquad.w_location as w_location
-import GoblinSabotageSquad.w_castle as w_castle
-import GoblinSabotageSquad.w_portal as w_portal
-import GoblinSabotageSquad.w_elf as w_elf
-import GoblinSabotageSquad.w_enemy_unit as w_enemy_unit
-import GoblinSabotageSquad.w_LavaGiant as w_LavaGiant
-import range_utility
-import location_calculator
-import math
+from w_castle import CastleWrapper
+from w_elf import ElfWrapper
+from w_ice_troll import IceTrollWrapper
+from w_lava_giant import LavaGiantWrapper
+from w_portal import PortalWrapper
+from w_mana_fountain import ManaFountainWrapper
 
 ATTACK_PORTAL_LOCATION_ACCURACY = 20
-
-
-class LocationCalculator:
-    """
-        this class is used to calculate some locations, currently the different defensive portals
-    """
-
-    def __init__(self, my_castle_location, enemy_castle_location, first_portal_location):
-        self.my_castle_location = my_castle_location
-        self.enemy_castle_location = enemy_castle_location
-        self.first_portal_location = first_portal_location
-
-    def calculate_second_def_portal_location(self):
-        q = self.first_portal_location.row - self.my_castle_location.row
-        t = self.first_portal_location.col - self.my_castle_location.col
-        return Location(self.my_castle_location.row + t, self.my_castle_location.col - abs(q))
-
-    def calculate_third_portal_location(self):
-        row = int((self.my_castle_location.row + self.enemy_castle_location.row) / 2)
-        col = int((self.my_castle_location.col + self.enemy_castle_location.col) / 2)
-        return Location(row=row, col=col)
 
 
 class TurnHandler:
     def __init__(self):
         self.game = None
         self.enemy_castle = None
-        self.my_living_elves = None
-        self.my_portals = None
-        self.enemy_castle = None
-        self.first_portal = None
         self.enemy_portals = None
+        self.my_portals = None
+        self.my_living_elves = None
+        self.my_ice_trolls = None
+        self.my_lava_giants = None
         self.my_castle = None
         self.my_creatures = None
-        self.my_elves_by_id = {}
-        self.my_portals_by_id = {}
-
         self.my_mana = None
+        self.my_mana_fountains = []
 
-        self.my_elves_by_role = {}
-        self.defensive_portal_locations_list = []
+    def wrap_game_data(self, game):
+        self.game = game
 
-    def wrap_gameobjects(self, game_objects):
-        wrapped_list = []
-        for game_object in game_objects:
-            if(type(Castle, game_object)):
-                wrapped_list.append(w_castle.CastleWrapper(game_object))
-            if (type(Elf, game_object)):
-                wrapped_list.append(w_elf.ElfWrapper(game_object, None))
-            if(type(LavaGiant, game_object)):
-                wrapped_list.append(w_LavaGiant.LavaGiant_Wrapper(game_object))
-            if(type(Portal, game_object)):
-                wrapped_list.append((w_portal.Portal_Wrapper(game_object),None))
-        return wrapped_list
+        self.enemy_castle = CastleWrapper(game.get_enemy_castle())
+        self.enemy_portals = map(lambda portal: PortalWrapper(portal), game.get_enemy_portals())
+
+        self.my_portals = map(lambda portal: PortalWrapper(portal, "none"), game.get_my_portals())
+        self.my_living_elves = map(lambda elf: ElfWrapper(elf, "none"), game.get_my_living_elves())
+        self.my_castle = CastleWrapper(game.get_my_castle())
+        self.my_lava_giants = map(lambda giant: LavaGiantWrapper(giant), game.get_my_lava_giants())
+        self.my_ice_trolls = map(lambda troll: IceTrollWrapper(troll), game.get_my_ice_trolls())
+        self.my_creatures = self.my_lava_giants + self.my_ice_trolls + self.my_living_elves
+        self.my_mana_fountains = map(lambda fountain: ManaFountainWrapper(fountain), game.get_my_mana_fountains())
+        self.my_mana = game.get_my_mana()
 
     def do_turn(self, game):
-        self.enemy_castle = self.wrap_gameobjects(game.get_enemy_castle())
-        self.my_living_elves = self.wrap_gameobjects(game.get_my_living_elves())
-        self.my_portals = self.wrap_gameobjects(game.get_my_portals())
-        self.my_castle = self.wrap_gameobjects(game.get_my_castle())
-        self.my_mana = game.get_my_mana()
-        self.enemy_portals = self.wrap_gameobjects(game.get_enemy_portals())
-        self.enemy_creatures = self.wrap_gameobjects((game.get_enemy_creatures(), game.get_enemy_living_elves()))
-        self.enemy_portals = self.wrap_gameobjects(game.get_enemy_portals())
-        self.my_creatures = self.wrap_gameobjects(game.get_my_creatures())
+        self.wrap_game_data(game)
+
+    def attack_elf_exists(self):
+        return len(filter(lambda elf: elf.role == "attacker", self.my_living_elves)) > 0
+
+    def attack_portal_exists(self):
+        return len(filter(lambda portal: portal.role == "attacker", self.my_portals)) > 0
+
+    def defender_elf_exists(self):
+        return len(filter(lambda elf: elf.role == "defender", self.my_living_elves)) > 0
+
+    def defender_portal_exists(self):
+        return len(filter(lambda portal: portal.role == "defender", self.my_portals)) > 0
+
+    def mana_fountain_exists(self):
+        return len(self.my_mana_fountains) > 0
+
+    def mana_fountain_elf_exists(self):
+        return len(filter(lambda elf: elf.role == "mana_fountain", self.my_mana_fountains)) > 0
+
+    def handle_elves(self):
+        self.allocate_elves()
+
+    def allocate_elves(self):
+        for elf in self.my_living_elves:
+            if self.my_castle.current_health() >= self.enemy_castle.current_health():
+                if not self.mana_fountain_exists() and not self.mana_fountain_exists():
+                    elf.role = "mana_fountain"
+                if not self.attack_elf_exists() and not self.attack_portal_exists():
+                    elf.role = "attacker"
+                if not self.defender_elf_exists() and not self.defender_elf_exists():
+                    elf.role = "defender"
+            else:
+                if not self.mana_fountain_exists() and not self.mana_fountain_exists():
+                    elf.role = "mana_fountain"
+                if not self.defender_elf_exists() and not self.defender_elf_exists():
+                    elf.role = "defender"
+                if not self.attack_elf_exists() and not self.attack_portal_exists():
+                    elf.role = "attacker"
 
 
 handler = TurnHandler()

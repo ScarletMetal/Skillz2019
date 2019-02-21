@@ -40,6 +40,12 @@ class TurnHandler:
     def do_turn(self, game):
         self.wrap_game_data(game)
 
+    def attack_elf_exists(self):
+        return len(filter(lambda elf: elf.role == "attacker", self.my_living_elves)) > 0
+
+    def attack_portal_exists(self):
+        return len(filter(lambda portal: portal.role == "attacker", self.my_portals)) > 0
+
     def handle_elves(self):
         self.allocate_elves()
 
@@ -47,7 +53,12 @@ class TurnHandler:
         map(lambda elf: elf.act_attacker(), self.attacker_elves)
 
     def allocate_elves(self):
-        pass
+
+        for elf in self.my_living_elves:
+            if not self.attack_elf_exists() and not self.attack_portal_exists():
+                elf.role = "attacker"
+
+
 
 handler = TurnHandler()
 

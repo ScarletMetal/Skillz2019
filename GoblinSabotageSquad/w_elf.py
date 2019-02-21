@@ -36,10 +36,10 @@ class ElfWrapper:
             self.move_to(location_calculator.calc_attack_portal_location(castle, self.ATTACK_PORTAL_RADIUS,
                                                                          enemy_portals))
 
-    def act_defender(self, castle, enemy_portals):
+    def act_defender(self, castle, enemy_portals, managens):
         if self.get_location() == location_calculator.calc_defense_portal_location(self.DEFENSE_PORTAL_RADIUS,
                                                                                    castle,
-                                                                                   enemy_portals) and self.elf.can_build_portal():
+                                                                                   enemy_portals,managens) and self.elf.can_build_portal():
             self.elf.build_portal()
         else:
             self.move_to(

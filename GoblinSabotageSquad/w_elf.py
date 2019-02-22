@@ -1,6 +1,6 @@
 from elf_kingdom import *
 from w_location import LocationWrapper as Location
-import GoblinSabotageSquad.location_calculator as location_calculator
+import location_calculator
 
 
 class ElfWrapper:

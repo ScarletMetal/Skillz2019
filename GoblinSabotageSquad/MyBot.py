@@ -47,6 +47,8 @@ class TurnHandler:
 
     def do_turn(self, game):
         self.wrap_game_data(game)
+        self.handle_elves()
+        self.handle_portals()
 
     def attack_elf_exists(self):
         return len(filter(lambda elf: elf.role == "attacker", self.my_living_elves)) > 0

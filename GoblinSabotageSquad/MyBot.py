@@ -5,6 +5,7 @@ from w_ice_troll import IceTrollWrapper
 from w_lava_giant import LavaGiantWrapper
 from w_portal import PortalWrapper
 from w_mana_fountain import ManaFountainWrapper
+from w_location import LocationWrapper
 
 ATTACK_PORTAL_LOCATION_ACCURACY = 20
 
@@ -27,6 +28,10 @@ class TurnHandler:
         self.my_mana = None
         self.my_mana_fountains = []
 
+        self.default_attack_portal_location = None
+        self.default_mana_fountain_location = None
+        self.default_defence_portal_location = None
+
     def wrap_game_data(self, game):
         self.game = game
 
@@ -44,6 +49,11 @@ class TurnHandler:
         self.enemy_lava_giant = map(lambda lava_giant: LavaGiantWrapper(lava_giant), game.get_enemy_lava_giants())
         self.enemy_elves = map(lambda elf: ElfWrapper(elf, None), game.get_enemy_living_elves())
         self.enemy_units = self.enemy_elves + self.enemy_ice_trolls + self.enemy_lava_giant
+
+        self.default_mana_fountain_location = LocationWrapper(self.my_castle.get_x()+30, self.my_castle.get_y()+30)
+        self.default_attack_portal_location = LocationWrapper(self.enemy_castle.get_x()+1000,
+                                                              self.enemy_castle.get_y()+1000)
+        self.default_defence_portal_location = LocationWrapper(self.my_castle.get_x()+100, self.my_castle.get_y()+100)
 
     def do_turn(self, game):
         self.wrap_game_data(game)
@@ -72,11 +82,13 @@ class TurnHandler:
         self.allocate_elves()
         for elf in self.my_living_elves:
             if elf.role == "mana_fountain":
-                elf.act_mana_fountain(self.my_castle, self.enemy_castle, self.my_mana_fountains)
+                elf.act_mana_fountain(self.my_castle, self.enemy_castle, self.my_mana_fountains,
+                                      self.default_mana_fountain_location)
             if elf.role == "attacker":
-                elf.act_attacker(self.enemy_castle, self.enemy_portals)
+                elf.act_attacker(self.enemy_castle, self.enemy_portals, self.default_attack_portal_location)
             if elf.role == "defender":
-                elf.act_defender(self.my_castle, self.enemy_portals, self.my_mana_fountains)
+                elf.act_defender(self.my_castle, self.enemy_portals, self.my_mana_fountains,
+                                 self.default_defence_portal_location)
 
     def allocate_elves(self):
         for elf in self.my_living_elves:
